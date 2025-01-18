@@ -129,19 +129,23 @@ values('Taina', 'Russia', '11/12/2021', '568','DETECTIVE', '5', '12', '6'),
 -- 1.Китептердин атын, чыккан жылын, жанрын чыгарыныз.
     select b.name,b.published_year,b.genre  from book b;
 -- 2.author мамлекеттери уникалдуу чыксын.
-select distinct a.country from author a;
+select distinct a.country from Author a;
 -- 3.2020-2023 жылдардын арасындагы китептер чыксын.
     select * from book where published_year between '1/1/2020' and '1/1/2023';
 -- 4.Детектив китептер жана алардын аттары чыксын.
     select name,genre from book where genre ='DETECTIVE';
 -- 5.Автордун аты-жону author деген бир колонкага чыксын.
-    select (first_name ,' ',last_name) as full_name from author;
+    select (first_name ,' ',last_name) as full_name from Author;
 -- 6.Германия жана Франциядан болгон авторлорду толук аты-жону менен сорттоп чыгарыныз.
-
+select a.first_name,a.last_name,a.country  from Author a where a.country = 'France' order by a.first_name ;
 -- 7.Романдан башка жана баасы 500 дон кичине болгон китептердин аты, олкосу, чыккан жылы, баасы жанры чыксын..
+    select b.name,b. county,b.published_year,b.county from Book b  where b.genre != 'ROMANS' and b.price < 500;
 -- 8.Бардык кыз авторлордун биринчи 3 ну чыгарыныз.
+    select * from Author a where a.gender = 'Female' limit 3;
 -- 9.Почтасы .com мн буткон, аты 4 тамгадан турган, кыз авторлорду чыгарыныз.
+select * from Author a where a.gender = 'Female' and a.email ilike '%.com' and length(a.first_name)=4;
 -- 10.Бардык олколорду жана ар бир олкодо канчадан автор бар экенин чыгаргыла.
+    select a.country,count(a.id) from Author a  group by a.country ;
 -- 11.Уч автор бар болгон олколорду аты мн сорттоп чыгарыныз.
 -- 12. Ар бир жанрдагы китептердин жалпы суммасын чыгарыныз
 -- 13. Роман жана Детектив китептеринин эн арзан бааларын чыгарыныз
