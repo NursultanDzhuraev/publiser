@@ -239,3 +239,4 @@ from book b
          join author a on b.author_id = a.id
 where b.published_year between '1/1/2010' and '1/1/2015'
 group by b.name, a.last_name, a.first_name, b.published_year ;
+select * from ?;
