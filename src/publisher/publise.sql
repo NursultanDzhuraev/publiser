@@ -39,6 +39,10 @@ alter table book
     add column author_id int references author (id);
 alter table language
     add constraint unique_language unique (language);
+alter table Language
+    drop constraint unique_language;
+alter table language
+    alter column language set not null;
 alter table author
     add constraint unique_email unique (email);
 truncate table language cascade;
@@ -74,6 +78,7 @@ values ('RELX Group'),
        ('Books.Ru Ltd.St Petersburg'),
        ('The Moscow Times'),
        ('Zhonghua Book Company');
+
 
 insert into author(first_name, last_name, email, date_of_brith, country, gender)
 values ('Sybilla', 'Toderbrugge', 'stoderbrugge0@jugem.jp', '9/25/1968', 'France', 'Female'),
@@ -202,14 +207,35 @@ select b.name, p.name, l.language
 from book b
          join publisher p on b.publisher_id = p.id
          join language l on b.language_id = l.id;
--- 156Авторлордун бардык маалыматтары жана издательстволору чыксын, издательство болбосо null чыксын
-select a.* , p.name as publisher_name
+-- 16Авторлордун бардык маалыматтары жана издательстволору чыксын, издательство болбосо null чыксын
+select a.*, p.name as publisher_name
 from author a
          left join book b on b.author_id = a.id
-        left join  publisher p on b.publisher_id=p.id;
+         left join publisher p on b.publisher_id = p.id;
 -- 17.Авторлордун толук аты-жону жана китептери чыксын, китеби жок болсо null чыксын.
+select a.first_name, a.last_name, b.name
+from author a
+         left join book b on a.id = b.author_id;
 -- 18.Кайсы тилде канча китеп бар экендиги ылдыйдан ойлдого сорттолуп чыксын.
+select l.language, count(b.id) as count_book
+from language l
+         join book b on l.id = b.language_id
+group by l.language;
+
 -- 19.Издательсtвонун аттары жана алардын тапкан акчасынын оточо суммасы тегеректелип чыгарылсын.
+    select p.name,round(avg(b.price)) as round_book
+    from publisher p join book b on p.id = b.publisher_id
+    group by p.name
+    order by round_book desc;
 -- 20.2010-2015 жылдардын арасындагы китептер жана автордун аты-фамилиясы чыксын.
+select b.name, a.last_name, a.first_name,b.published_year
+from book b
+         join author a on b.author_id = a.id
+where b.published_year between '1/1/2010' and '1/1/2015';
 -- 21.2010-2015 жылдардын арасындагы китептердин авторлорунун толук аты-жону жана алардын тапкан акчаларынын жалпы суммасы чыксын.
 
+select b.name, a.last_name, a.first_name,b.published_year,sum(b.price)
+from book b
+         join author a on b.author_id = a.id
+where b.published_year between '1/1/2010' and '1/1/2015'
+group by b.name, a.last_name, a.first_name, b.published_year ;
